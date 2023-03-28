@@ -1,21 +1,21 @@
 <template>
   <div class="container">
-    <HeaderWeb></HeaderWeb>
     <div id="app">
-      <router-view></router-view>
+      <WorldData />
+      <TableData />
     </div>
   </div>
 </template>
 
 <script>
-import store from "./store/store";
-import HeaderWeb from "./components/ele_pages/HeaderWeb.vue";
+import WorldData from "../components/pages/WorldData.vue";
+import TableData from "../components/pages/PageWorld.vue";
 export default {
-  name: "App",
+  name: "HomePage",
   components: {
-    HeaderWeb,
+    WorldData,
+    TableData,
   },
-  store,
 };
 </script>
 <style>
