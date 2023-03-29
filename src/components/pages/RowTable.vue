@@ -10,6 +10,9 @@
         v-model="searchTerm"
         placeholder="Your Country"
       />
+      <a-button class="export_button" @click="exportToExcel"
+        >Export To Excel</a-button
+      >
     </div>
     <a-table
       :data-source="dataSource"
@@ -23,6 +26,8 @@
 </template>
 
 <script>
+import * as XLSX from "xlsx";
+import FileSaver from "file-saver";
 export default {
   name: "RowTable1",
   props: {
@@ -49,12 +54,11 @@ export default {
           TotalCases: country.cases,
           TotalDeaths: country.deaths,
           TotalRecovered: country.total_recovered,
-          Serious_Critical: country.serious_critical,
+          SeriousCritical: country.serious_critical,
           ActiveCases: country.active_cases,
           NewDeaths: country.new_deaths,
           NewCases: country.new_cases,
-          total_tests: country.total_tests,
-          serious_critical: country.serious_critical,
+          TotalTests: country.total_tests,
           DeathsPer1MPopulation: country.deaths_per_1m_population,
           TestsPer1MPopulation: country.tests_per_1m_population,
         }));
@@ -125,12 +129,10 @@ export default {
 
         {
           title: "SERIOUS, CRITICAL",
-          dataIndex: "Serious_Critical",
+          dataIndex: "SeriousCritical",
           sorter: (a, b) => {
-            const valA =
-              a.Serious_Critical === "N/A" ? "-1" : a.Serious_Critical;
-            const valB =
-              b.Serious_Critical === "N/A" ? "-1" : b.Serious_Critical;
+            const valA = a.SeriousCritical === "N/A" ? "-1" : a.SeriousCritical;
+            const valB = b.SeriousCritical === "N/A" ? "-1" : b.SeriousCritical;
             return (
               parseInt(valA.replace(/,/g, "")) -
               parseInt(valB.replace(/,/g, ""))
@@ -207,8 +209,15 @@ export default {
         },
         {
           title: "TOTAL TEST ",
-          dataIndex: "total_tests",
-          sorter: (a, b) => a.total_tests - b.total_tests,
+          dataIndex: "TotalTests",
+          sorter: (a, b) => {
+            const valA = a.TotalTests === "N/A" ? "-1" : a.TotalTests;
+            const valB = b.TotalTests === "N/A" ? "-1" : b.TotalTests;
+            return (
+              parseInt(valA.replace(/,/g, "")) -
+              parseInt(valB.replace(/,/g, ""))
+            );
+          },
           width: 120,
           customCell: () => {
             return {
@@ -246,6 +255,25 @@ export default {
       ];
 
       return columns;
+    },
+  },
+  methods: {
+    async exportToExcel() {
+      /* convert data to worksheet */
+      const ws = XLSX.utils.json_to_sheet(this.dataSource);
+
+      /* create workbook and add worksheet */
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      /* generate XLSX file */
+      const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
+      /* save file using FileSaver.js */
+      FileSaver.saveAs(
+        new Blob([wbout], { type: "application/octet-stream" }),
+        "file.xlsx"
+      );
     },
   },
 };
@@ -349,5 +377,10 @@ router-link {
 }
 router-link:hover {
   transform: scale(1.1);
+}
+.export_button {
+  background-color: #074f80;
+  padding: 2px;
+  margin-left: 20px;
 }
 </style>

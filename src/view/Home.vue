@@ -21,14 +21,12 @@ export default {
 <style>
 .container {
   background-color: #283149;
-  width: 100%;
-  height: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: end;
-  margin-top: 60px;
+  margin: 8px;
 }
 </style>

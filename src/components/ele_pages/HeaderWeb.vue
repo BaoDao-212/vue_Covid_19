@@ -27,8 +27,7 @@
           <div class="hover_color"></div>
         </li>
         <li>
-          <a href="#">ABOUT</a>
-          <div class="hover_color"></div>
+          <router-link to="/about">ABOUT</router-link>
         </li>
       </ul>
     </nav>
@@ -88,7 +87,6 @@ nav li:hover {
 }
 nav li:hover + .hover_color {
   color: #04080c;
- 
 }
 .span {
   font-size: 20px;
