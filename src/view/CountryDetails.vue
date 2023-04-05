@@ -7,7 +7,7 @@
             id="details_covid191"
             :width="500"
             :height="500"
-            style="background-color: #969fb5"
+            style="background-color: #283149"
             type="bar"
             :options="chartOptions"
             :series="chartSeries"
@@ -16,7 +16,7 @@
             id="details_covid192"
             :width="500"
             :height="500"
-            style="background-color: #969fb5"
+            style="background-color: #283149"
             type="bar"
             :options="chartOptionbar"
             :series="seriesbar"
@@ -83,7 +83,6 @@
 import VueApexCharts from "vue-apexcharts";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-// import html2pdf from "html2pdf.js";
 export default {
   components: { VueApexCharts },
   data() {
@@ -107,15 +106,47 @@ export default {
       TotalRecovered: this.$route.params.num.TotalRecovered.replace(/[,]/g, ""),
       TotalTests: this.$route.params.num.TotalTests.replace(/[,]/g, ""),
       chartOptions: {
+        theme: {
+          palette: "palette8", // upto palette10
+        },
         chart: {
           id: "basic-bar",
         },
+        dataLabels: {
+          style: {
+            colors: ["#5FCE97"],
+            fontSize: "12px",
+          },
+        },
+        grid: {
+          dataLabels: {
+            style: {
+              colors: ["#00ff00"], // Green color
+            },
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              colors: ["#5FCE97", "#059da0", "#FF9900", "#CF3837"],
+              fontSize: "12px",
+            },
+          },
+        },
+        colors: ["#02696f"],
         xaxis: {
           categories: ["New Cases", "ActiveCases", "Serious Critical"],
+          labels: {
+            style: {
+              colors: ["#5FCE97", "#059da0", "#FF9900"],
+              fontSize: "12px",
+            },
+          },
         },
       },
       chartSeries: [
         {
+          name: "Cases",
           data: [
             this.$route.params.num.NewCases.replace(/[,]/g, ""),
             this.$route.params.num.ActiveCases.replace(/[,]/g, ""),
@@ -127,7 +158,28 @@ export default {
         chart: {
           id: "basic-bar",
         },
-
+        dataLabels: {
+          style: {
+            colors: ["#5FCE97"],
+            fontSize: "12px",
+          },
+        },
+        grid: {
+          dataLabels: {
+            style: {
+              colors: ["#00ff00"], // Green color
+            },
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              colors: ["#5FCE97", "#059da0", "#FF9900", "#CF3837"],
+              fontSize: "12px",
+            },
+          },
+        },
+        colors: ["#02696f"],
         xaxis: {
           categories: [
             "Total Cases",
@@ -135,6 +187,12 @@ export default {
             "Total Tests",
             "Total Deaths",
           ],
+          labels: {
+            style: {
+              colors: ["#5FCE97", "#059da0", "#FF9900", "#CF3837"],
+              fontSize: "12px",
+            },
+          },
         },
         title: {
           text: "",
@@ -148,6 +206,7 @@ export default {
       },
       seriesbar: [
         {
+          name: "Cases",
           data: [
             this.$route.params.num.TotalCases.replace(/[,]/g, ""),
             this.$route.params.num.TotalRecovered.replace(/[,]/g, ""),
@@ -162,33 +221,22 @@ export default {
     async generatePDF() {
       const doc = new jsPDF();
       const options = { scale: 1, backgroundColor: "#c4cbaa" };
-
-      // capture the first page content
       const page1 = document.getElementById("details_covid191");
       const canvas1 = await html2canvas(page1, options);
       const imgData1 = canvas1.toDataURL("image/jpeg", 1.0);
-      doc.addImage(imgData1, "JPEG", 15, 40, 180, 250);
-
-      // add a new page for the second chart
+      doc.addImage(imgData1, "JPEG", 40, 40);
       doc.addPage();
-
-      // capture the second page content
       const page2 = document.getElementById("details_covid192");
       const canvas2 = await html2canvas(page2, options);
       const imgData2 = canvas2.toDataURL("image/jpeg", 1.0);
-      doc.addImage(imgData2, "JPEG", 15, 40, 180, 250);
-
-      // add a new page for the third chart
+      doc.addImage(imgData2, "JPEG", 40, 40);
       doc.addPage();
-
-      // capture the third page content
       const page3 = document.getElementById("details_covid193");
       const canvas3 = await html2canvas(page3, options);
       const imgData3 = canvas3.toDataURL("image/jpeg", 1.0);
-      doc.addImage(imgData3, "JPEG", 20, 40, 180, 250);
-
-      // Save the PDF
-      doc.save("covid-details.pdf");
+      doc.addImage(imgData3, "JPEG", 40, 40);
+      const namefile = this.Country + "_covid-details.pdf";
+      doc.save(namefile);
     },
   },
 };
@@ -201,14 +249,12 @@ export default {
   color: #333;
 }
 .details_card {
-  width: 600px;
-  height: 600px;
   text-align: center;
 }
 .card_details > .ant-card-head,
 .card_details > .ant-card-body {
-  background-color: #969fb5;
-  color: rgb(0, 0, 0);
+  background-color: #283149;
+  color: #15f2ff;
   font-weight: bold;
   font-size: 20px;
   min-height: auto;
@@ -216,17 +262,18 @@ export default {
 }
 .col1,
 .label1 {
-  background-color: #969fb5;
+  background-color: #283149;
   display: flex;
   flex-direction: row;
   align-content: center;
   justify-content: center;
   font-weight: bold;
   font-size: 18px;
+  color: #15f2ff;
 }
 .button_dowload {
-  background-color: #4d6e97;
-  color: #ffffff;
+  background-color: #02696f;
+  color: #1a00dd;
   width: 60px;
   height: 40px;
   margin: 20px 0 0 0;

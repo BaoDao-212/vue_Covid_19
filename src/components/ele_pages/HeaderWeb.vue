@@ -6,25 +6,10 @@
           <span class="label_vaccovid">VACCOVID</span>
           <span class="label_live">.LIVE</span>
           <div class="circle"></div>
+          
         </div>
         <li>
           <router-link to="/home">COVID-19</router-link>
-        </li>
-        <li>
-          <a href="#">VACCINE</a>
-          <div class="hover_color"></div>
-        </li>
-        <li>
-          <a href="#">TREATMENT</a>
-          <div class="hover_color"></div>
-        </li>
-        <li>
-          <a href="#">MAP</a>
-          <div class="hover_color"></div>
-        </li>
-        <li>
-          <a href="#">NEWS</a>
-          <div class="hover_color"></div>
         </li>
         <li>
           <router-link to="/about">ABOUT</router-link>
@@ -34,6 +19,8 @@
   </header>
 </template>
 <script>
+
+
 export default {
   name: "HeaderWeb",
 };

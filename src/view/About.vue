@@ -20,6 +20,7 @@
       <h4>
         <a :href="project.link">{{ project.title }}</a>
       </h4>
+      <p>{{ project.teachnology }}</p>
       <p>{{ project.description }}</p>
     </div>
   </div>
@@ -34,28 +35,45 @@ export default {
       avatarUrl:
         "https://scontent.fhan19-1.fna.fbcdn.net/v/t1.6435-9/106506721_177715837073046_4629463073523948999_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=2Sk2Ft1JBZ0AX8x1rmM&_nc_ht=scontent.fhan19-1.fna&oh=00_AfC5AE3AZGv922PmDzRNoG1kxFFL4tqeUYh2JXogNZbRyA&oe=644B662E",
       description:
-        "Xin chào! Tôi là một lập trình viên Front-end với kinh nghiệm và kiến thức trong Vue, React và Angular. Tôi đam mê xây dựng các ứng dụng web đẹp và chất lượng cao với trải nghiệm người dùng tốt nhất có thể.",
-      email: "example@mail.com",
+        "Xin chào! Tôi là một lập trình viên Front-end với kinh nghiệm và kiến thức trong Vue, React,NestJs,Typescript. Tôi đam mê xây dựng các ứng dụng web đẹp và chất lượng cao với trải nghiệm người dùng tốt nhất có thể.",
+      email: "nhbao2@mail.com",
       website: "https://github.com/BaoDao-212",
       address: "Hoàng Mai-Hà Nội",
       latestProjects: [
         {
           title: "Project 1",
-          link: "#",
+          link: "https://github.com/BaoDao-212/vue_Covid_19",
+          technololy: "Vue2 Ant-Design RestAPI JS CSS HTML",
           description:
-            "Đây là dòng mô tả ngắn gọn của dự án đầu tiên. Nó sẽ giúp bạn hiểu hơn về dự án này.",
+            "Đây trang web dùng vue2 và sử dụng thêm một số thư viện như ant-design và một số thư viện hỗ trợ. Dùng các api trên RapidAPI cung cấp viết trang web xem thông tin covid-19",
         },
         {
-          title: "Project 2",
-          link: "#",
+          title: "Project 2 back-end",
+          link: "https://github.com/BaoDao-212/backend_project1",
+          teachnology: "NestJs PostgresQL TyperScript GraphQL ...",
           description:
-            "Đây là dòng mô tả ngắn gọn của dự án thứ hai. Nó sẽ giúp bạn hiểu hơn về dự án này.",
+            "Đây project môn học Project1 tại Soict viết về website quản lý quán cà phê đơn giản",
         },
         {
-          title: "Project 3",
-          link: "#",
+          title: "Project 2 front-end",
+          link: "https://github.com/BaoDao-212/frontend-project1",
+          teachnology: "ReactJs Apollo TyperScript TailwindCSS ...",
           description:
-            "Đây là dòng mô tả ngắn gọn của dự án thứ ba. Nó sẽ giúp bạn hiểu hơn về dự án này.",
+            "Đây project môn học Project1 tại Soict viết về website quản lý quán cà phê đơn giản",
+        },
+        {
+          title: "Project 3 back-end",
+          link: "https://github.com/HoangHoang1408/se-hust-backend",
+          teachnology: "NestJs PostgresQL TyperScript GraphQL ...",
+          description:
+            "Đây project môn học Nhâp môn công nghệ phần mềm tại Soict viết về website quản lý nhân khảu trong khu dân cư",
+        },
+        {
+          title: "Project 3 front-end",
+          link: "https://github.com/HoangHoang1408/se-hust-frontend",
+          teachnology: "ReactJs Apollo TyperScript TailwindCSS ...",
+          description:
+            "Đây project môn học Nhâp môn công nghệ phần mềm tại Soict viết về website quản lý nhân khảu trong khu dân cư",
         },
       ],
     };
@@ -65,7 +83,7 @@ export default {
 
 <style>
 .about-me {
-    margin: 20px;
+  margin: 20px;
   align-content: center;
   background-color: #283149;
   text-align: left;

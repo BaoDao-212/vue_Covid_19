@@ -16,6 +16,7 @@ export default {
     RowTable,
   },
   data() {
+    console.log(this.flagData);
     return {
       countriesData: [],
     };

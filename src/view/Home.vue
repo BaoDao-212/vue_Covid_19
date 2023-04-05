@@ -21,8 +21,7 @@ export default {
 <style>
 .container {
   background-color: #283149;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

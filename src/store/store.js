@@ -1,12 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { fetchCorona, fetchIndiaTimeline } from "./serve";
+import { fetchCorona, fetchIndiaTimeline,fetchFlag } from "./serve";
 
 Vue.use(Vuex);
 
 const state = {
   coronaData: null,
   indiaTimelineData: null,
+  flagData: null,
 };
 
 const mutations = {
@@ -16,6 +17,9 @@ const mutations = {
   setIndiaTimelineData(state, data) {
     state.indiaTimelineData = data;
   },
+  setFlagData(state, data) {
+    state.flagData = data;
+  },
 };
 
 const actions = {
@@ -23,6 +27,14 @@ const actions = {
     try {
       const response = await fetchCorona();
       commit("setCoronaData", response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  async fetchFlagData({ commit }) {
+    try {
+      const response = await fetchFlag();
+      commit("setFlagData",response.data);
     } catch (error) {
       console.log(error);
     }
@@ -39,6 +51,7 @@ const actions = {
 
 const getters = {
   coronaData: (state) => state.coronaData,
+  flagData: (state) => state.flagData,
   indiaTimelineData: (state) => state.indiaTimelineData,
 };
 

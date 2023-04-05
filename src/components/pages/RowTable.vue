@@ -1,8 +1,6 @@
 <template>
   <div>
     <div class="label">
-      <span class="world_data">World Data</span>
-      <span class="live_updata">- Live Update in 2:30</span>
       <input
         class="input"
         type="text"
@@ -10,24 +8,30 @@
         v-model="searchTerm"
         placeholder="Your Country"
       />
-      <a-button class="export_button" @click="exportToExcel"
-        >Export To Excel</a-button
+      <a-button class="export_button" @click="exportToExcel">
+        Export To Excel</a-button
       >
     </div>
+
     <a-table
       :data-source="dataSource"
       :columns="columns"
       size="middle"
       :pagination="false"
-      :scroll="{ y: 458, x: true }"
+      :scroll="{ y: 340, x: true }"
     >
     </a-table>
   </div>
 </template>
 
 <script>
-import * as XLSX from "xlsx";
-import FileSaver from "file-saver";
+import * as ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+// eslint-disable-next-line
+import countries from "../../country.config";
+
+import { countryToAlpha2 } from "country-to-iso";
 export default {
   name: "RowTable1",
   props: {
@@ -69,7 +73,7 @@ export default {
         {
           title: "NUM",
           dataIndex: "num",
-          width: 60,
+          width: 40,
           customCell: () => {
             return {
               style: {
@@ -78,6 +82,7 @@ export default {
             };
           },
         },
+
         {
           title: "COUNTRY",
           dataIndex: "Country",
@@ -89,6 +94,22 @@ export default {
                 color: "white",
               },
             };
+          },
+          customRender: (text, record) => {
+            const countryCode =
+              countryToAlpha2(record.Country) !== null
+                ? countryToAlpha2(record.Country)
+                : countries[record.Country];
+            return (
+              <div>
+                {countryCode ? (
+                  <flag iso={countryCode.toLowerCase()}></flag>
+                ) : (
+                  <flag iso="un"></flag>
+                )}
+                <span>{record.Country}</span>
+              </div>
+            );
           },
         },
         {
@@ -257,23 +278,97 @@ export default {
       return columns;
     },
   },
+
   methods: {
     async exportToExcel() {
-      /* convert data to worksheet */
-      const ws = XLSX.utils.json_to_sheet(this.dataSource);
+      const data = this.dataSource;
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Report");
+      const cell = worksheet.getCell("E1");
+      cell.value = "Global Covid-19 status";
+      cell.font = { bold: true, size: 16 };
+      const headers = [
+        "Number",
+        "Flag",
+        "Country",
+        "Total Cases",
+        "Total Deaths",
+        "New Cases",
+        "Total Recovered",
+        "Serious Critical",
+        "TotalTests",
+        "Active Cases",
+        "New Deaths",
+        "Deaths Per 1 Milion People",
+        "Tests Per 1 Milion People",
+      ];
+      const headerRow = worksheet.addRow(headers);
+      // eslint-disable-next-line
+      for (const row of data) {
+        //create a new flag country
+        const countryCode =
+          countryToAlpha2(row.Country) !== null
+            ? countryToAlpha2(row.Country)
+            : countries[row.Country];
+        // eslint-disable-next-line
+        const code = countryCode ? countryCode.toLowerCase() : "un";
+        // const imageUrl = require(`@/assets/${code}.svg`).toString();
+        // console.log(imageUrl);
+        const response = await fetch(
+          require(`@/assets/${code}.svg`).toString()
+        );
+        const imageBuffer = await response.arrayBuffer();
+        const imageId = await workbook.addImage({
+          buffer: imageBuffer,
+          extension: "svg",
+        });
 
-      /* create workbook and add worksheet */
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+        // console.log(imageBuffer);
+        // worksheet.addBackgroundImage(imageId);
+        worksheet.addImage(imageId, {
+          tl: { col: 1, row: imageId + 2 },
+          br: { col: 2, row: imageId + 3 },
+          editAs: "oneCell",
+        });
+        worksheet.addRow([
+          row.num,
+          "",
+          row.Country,
+          parseInt(row.TotalCases.replace(/,/g, "")),
+          parseInt(row.TotalDeaths.replace(/,/g, "")),
+          parseInt(row.NewCases.replace(/,/g, "")),
+          parseInt(row.TotalRecovered.replace(/,/g, "")),
+          parseInt(row.SeriousCritical.replace(/,/g, "")),
+          parseInt(row.ActiveCases.replace(/,/g, "")),
+          parseInt(row.TotalTests.replace(/,/g, "")),
+          parseInt(row.NewDeaths.replace(/,/g, "")),
+          parseInt(row.DeathsPer1MPopulation.replace(/,/g, "")),
+          parseInt(row.TestsPer1MPopulation.replace(/,/g, "")),
+        ]);
+      }
 
-      /* generate XLSX file */
-      const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      worksheet.columns.forEach((column, index) => {
+        if (index != 4 && index != 1) {
+          let maxLength = 0;
+          column.eachCell((cell) => {
+            const columnLength = cell.value ? cell.value.toString().length : 0;
+            if (columnLength > maxLength) {
+              maxLength = columnLength;
+            }
+          });
+          column.width = maxLength < 10 ? 10 : maxLength + 2;
+        } else if (index == 4) {
+          column.width = 10;
+        } else {
+          column.width = 4;
+        }
+      });
+      headerRow.eachCell((cell) => {
+        cell.font = { bold: true };
+      });
 
-      /* save file using FileSaver.js */
-      FileSaver.saveAs(
-        new Blob([wbout], { type: "application/octet-stream" }),
-        "file.xlsx"
-      );
+      const buffer = await workbook.xlsx.writeBuffer();
+      saveAs(new Blob([buffer]), "report.xlsx");
     },
   },
 };
@@ -323,12 +418,13 @@ export default {
   background: #1a1a2e;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
+  padding: 10px;
 }
 
 input::placeholder {
   color: rgb(141, 137, 137);
   opacity: 1; /* Độ mờ của placeholder */
-  padding-left: 10px;
+  text-align: center;
 }
 input {
   background-color: #074f80;
@@ -341,10 +437,11 @@ input {
   border-radius: 6px;
   border: 0;
   padding: 6px;
+  transition: transform ease 1s;
 }
 input:hover {
-  transition: transform ease 2s;
   transform: scale(1.05);
+  background-color: #00204a;
 }
 .ant-table-body::-webkit-scrollbar {
   width: 6px;
@@ -382,5 +479,15 @@ router-link:hover {
   background-color: #074f80;
   padding: 2px;
   margin-left: 20px;
+  color: #838588;
+  transition: transform ease 15s;
+  font-weight: bold;
+}
+.export_button:hover {
+  background-color: #00204a;
+  transform: scale(1.05);
+}
+span {
+  padding-left: 5px;
 }
 </style>

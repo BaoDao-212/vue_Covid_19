@@ -3,10 +3,13 @@ import App from "./App.vue";
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 import router from "./router/router";
+import VueI18n from "vue-i18n";
+import FlagIcon from "vue-flag-icon";
+Vue.use(FlagIcon);
+Vue.use(VueI18n);
 Vue.use(Antd);
 Vue.config.productionTip = false;
-// console.log(process.env.RAPIDAPI_KEY);
-// console.log(process.env.RAPIDAPI_HOST);
+
 new Vue({
   router,
   render: (h) => h(App),
